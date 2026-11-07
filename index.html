@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>❌ Tic-Tac-Toe Game ⭕</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>" />
+
+    <!-- Stlite Mountable CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.73.1/build/stlite.css"
+    />
+
+    <style>
+      /* Ensure full height & sleek background */
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background-color: #0e1117;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+
+      /* Custom Loading Overlay */
+      #loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #0e1117;
+        color: #ffffff;
+        z-index: 99999;
+        transition: opacity 0.4s ease-out, visibility 0.4s;
+      }
+
+      .spinner {
+        width: 52px;
+        height: 52px;
+        border: 4px solid rgba(255, 255, 255, 0.15);
+        border-top-color: #ff4b4b;
+        border-radius: 50%;
+        animation: spin 0.9s linear infinite;
+        margin-bottom: 20px;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .loading-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+      }
+
+      .loading-subtitle {
+        font-size: 0.9rem;
+        color: #a0a4ae;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Loading Screen while WebAssembly / Python runtime loads -->
+    <div id="loading-overlay">
+      <div class="spinner"></div>
+      <div class="loading-title">Loading Tic-Tac-Toe...</div>
+      <div class="loading-subtitle">Initializing WebAssembly & Python runtime in your browser</div>
+    </div>
+
+    <!-- DOM Target for Streamlit -->
+    <div id="root"></div>
+
+    <!-- Stlite Mountable Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.73.1/build/stlite.js"></script>
+    <script>
+      stlite.mount(
+        {
+          requirements: ["numpy"],
+          entrypoint: "app.py",
+          files: {
+            "app.py": {
+              url: "app.py",
+            },
+          },
+        },
+        document.getElementById("root")
+      ).then(() => {
+        // Fade out and remove loading overlay once mounted
+        const overlay = document.getElementById("loading-overlay");
+        if (overlay) {
+          overlay.style.opacity = "0";
+          setTimeout(() => {
+            overlay.style.visibility = "hidden";
+          }, 400);
+        }
+      });
+    </script>
+  </body>
+</html>
